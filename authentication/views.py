@@ -145,6 +145,59 @@ class LoginView(APIView):
         }, status=status.HTTP_200_OK)
 
 
+class SocialLoginView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        full_name = request.data.get('full_name', '')
+
+        if not email:
+            return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # We ensure emails are lowercased for consistency
+        email = email.lower().strip()
+
+        # Check if user already exists
+        user = User.objects.filter(email=email).first()
+
+        if user:
+            # Case 1 & 2: User exists
+            if not user.is_active:
+                user.is_active = True
+                user.save()
+            
+            # Ensure profile exists
+            from .models import Profile
+            Profile.objects.get_or_create(user=user, defaults={'full_name': full_name or email.split('@')[0]})
+            
+            message = 'Login successful.'
+        else:
+            # Case 3: User doesn't exist
+            # Create a new active user
+            user = User.objects.create_user(
+                email=email,
+                username=email, # Assuming username uses email
+                is_active=True
+            )
+            # Set an unusable password so they can only log in via social auth
+            # or issue a "forgot password" reset later if they want a manual password.
+            user.set_unusable_password()
+            user.save()
+
+            from .models import Profile
+            Profile.objects.create(user=user, full_name=full_name or email.split('@')[0])
+            
+            message = 'User created and logged in successfully.'
+
+        # Generate JWT tokens
+        refresh = RefreshToken.for_user(user)
+
+        return Response({
+            'message': message,
+            'access': str(refresh.access_token),
+            'refresh': str(refresh),
+        }, status=status.HTTP_200_OK)
+
+
 class ChangePasswordView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
