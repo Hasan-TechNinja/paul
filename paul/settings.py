@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'authentication',
     'subscription',
     'journal',
+    'program',
 ]
 
 MIDDLEWARE = [

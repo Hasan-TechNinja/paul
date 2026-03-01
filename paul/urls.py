@@ -23,6 +23,7 @@ urlpatterns = [
     path('auth/', include('authentication.urls')),
     path('subscription/', include('subscription.urls')),
     path('journal/', include('journal.urls')),
+    path('program/', include('program.urls')),
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
