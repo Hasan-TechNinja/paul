@@ -7,6 +7,7 @@ class Theme(models.Model):
     description = models.TextField(blank=True)
     is_free_trial = models.BooleanField(default=False)
     icon = models.ImageField(upload_to='theme_icons/', blank=True, null=True)
+    icon_url = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

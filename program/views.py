@@ -8,11 +8,11 @@ from .serializers import ThemeSerializer, SessionSerializer, SessionReflectionSe
 class ThemeListView(generics.ListAPIView):
     queryset = Theme.objects.all().order_by('created_at')
     serializer_class = ThemeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
 class ThemeSessionListView(generics.ListAPIView):
     serializer_class = SessionSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         theme_id = self.kwargs.get('theme_id')
@@ -22,10 +22,10 @@ class ThemeSessionListView(generics.ListAPIView):
 class SessionDetailView(generics.RetrieveAPIView):
     queryset = Session.objects.all()
     serializer_class = SessionSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
 class SessionReflectionCreateUpdateView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request, session_id):
         session = get_object_or_404(Session, id=session_id)
