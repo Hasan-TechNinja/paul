@@ -13,7 +13,7 @@ class RegisterOTP(models.Model):
         return self.email
 
     def expired(self):
-        return self.created_at + timedelta(minutes=5) < timezone.now()
+        return self.created_at + timedelta(minutes=3) < timezone.now()
 
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

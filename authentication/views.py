@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 import random
 from django.utils import timezone
 from .models import Profile
+from deep_translator import GoogleTranslator
 
 User = get_user_model()
 
@@ -72,9 +73,10 @@ class RegisterView(APIView):
 
         # Save OTP in DB
         from .models import RegisterOTP
+        RegisterOTP.objects.filter(email=email).delete()
         RegisterOTP.objects.create(email=email, otp=code, created_at=timezone.now())
         
-        return Response({'message': 'Registration successful. Check your email to verify your account.'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Registration successful. Check OTP in your email to verify your account.'}, status=status.HTTP_200_OK)
 
 
 class VerifyView(APIView):
@@ -339,4 +341,40 @@ class ProfileView(APIView):
         profile.save()
         
         return Response({'message': 'Profile updated successfully'}, status=status.HTTP_200_OK)
-    
+
+class TranslateTextView(APIView):
+    def post(self, request):
+        target_lang = request.data.get('lang')
+        texts = request.data.get('texts')
+
+        if not target_lang or not texts:
+            return Response(
+                {'error': 'lang and texts fields are required in the JSON payload'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        if not isinstance(texts, dict):
+            return Response(
+                {'error': 'texts must be a dictionary of key-value pairs'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        translated_texts = {}
+        try:
+            # We use deep_translator's GoogleTranslator to perform the translation
+            translator = GoogleTranslator(source='auto', target=target_lang)
+            for key, text in texts.items():
+                if isinstance(text, str) and text.strip():
+                    translated_texts[key] = translator.translate(text)
+                else:
+                    translated_texts[key] = text
+                
+            return Response({
+                'lang': target_lang,
+                'texts': translated_texts
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {'error': f'Translation failed: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
