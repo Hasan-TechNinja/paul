@@ -5,11 +5,12 @@ from rest_framework.permissions import IsAuthenticated
 from django.utils import timezone
 from .models import Plan, UserSubscription
 from .serializers import PlanSerializer, UserSubscriptionSerializer, SubscribeSerializer
+from rest_framework import permissions
 
 class PlanListView(generics.ListAPIView):
     queryset = Plan.objects.all()
     serializer_class = PlanSerializer
-    permission_classes = [] # Allow any client to see the plans
+    permission_classes = [permissions.AllowAny] # Allow any client to see the plans
 
 class CurrentSubscriptionView(generics.RetrieveAPIView):
     serializer_class = UserSubscriptionSerializer
@@ -19,6 +20,13 @@ class CurrentSubscriptionView(generics.RetrieveAPIView):
         # Return the subscription for the current user, or create a 'free' state if none exists.
         sub, created = UserSubscription.objects.get_or_create(user=self.request.user)
         return sub
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        data = serializer.data
+        data['subscription'] = bool(instance.plan and instance.is_active)
+        return Response(data)
 
 class SubscribeView(APIView):
     permission_classes = [IsAuthenticated]

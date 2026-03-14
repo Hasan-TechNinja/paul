@@ -3,7 +3,7 @@ from .models import Theme, Session, SessionReflection
 
 # Register your models here.
 class ThemeAdmin(admin.ModelAdmin):
-    list_display = ('id','title', 'is_free_trial', 'created_at')
+    list_display = ('id','title', 'is_free_trial', 'is_authenticate', 'created_at')
     list_filter = ('is_free_trial', 'created_at')
     search_fields = ('title', 'description')
     ordering = ('-created_at',)

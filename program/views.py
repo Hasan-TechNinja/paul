@@ -6,9 +6,16 @@ from .models import Theme, Session, SessionReflection
 from .serializers import ThemeSerializer, SessionSerializer, SessionReflectionSerializer
 
 class ThemeListView(generics.ListAPIView):
-    queryset = Theme.objects.all().order_by('created_at')
     serializer_class = ThemeSerializer
     permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        queryset = Theme.objects.all().order_by('created_at')
+        # if self.request.user.is_authenticated:
+        #     queryset = queryset.filter(is_authenticate=True)
+        # else:
+        #     queryset = queryset.filter(is_authenticate=False)
+        return queryset
 
 class ThemeSessionListView(generics.ListAPIView):
     serializer_class = SessionSerializer
@@ -17,12 +24,20 @@ class ThemeSessionListView(generics.ListAPIView):
     def get_queryset(self):
         theme_id = self.kwargs.get('theme_id')
         theme = get_object_or_404(Theme, id=theme_id)
+        if theme.is_authenticate and not self.request.user.is_authenticated:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Authentication required to view this theme's sessions.")
         return Session.objects.filter(theme=theme).order_by('order', 'created_at')
 
 class SessionDetailView(generics.RetrieveAPIView):
-    queryset = Session.objects.all()
     serializer_class = SessionSerializer
     permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        queryset = Session.objects.all()
+        if not self.request.user.is_authenticated:
+            queryset = queryset.filter(theme__is_authenticate=False)
+        return queryset
 
 class SessionReflectionCreateUpdateView(APIView):
     permission_classes = [permissions.AllowAny]

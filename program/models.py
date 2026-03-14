@@ -6,6 +6,7 @@ class Theme(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     is_free_trial = models.BooleanField(default=False)
+    is_authenticate = models.BooleanField(default=True)
     icon = models.ImageField(upload_to='theme_icons/', blank=True, null=True)
     icon_url = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
