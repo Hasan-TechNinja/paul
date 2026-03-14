@@ -4,9 +4,11 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Theme(models.Model):
     title = models.CharField(max_length=255)
+    intro_content = models.JSONField(default=list, blank=True)
     description = models.TextField(blank=True)
     is_free_trial = models.BooleanField(default=False)
     is_authenticate = models.BooleanField(default=True)
+    session_key = models.CharField(max_length=255, blank=True, null=True, unique=True)
     icon = models.ImageField(upload_to='theme_icons/', blank=True, null=True)
     icon_url = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -20,7 +22,7 @@ class Session(models.Model):
     subtitle = models.CharField(max_length=255, blank=True)
     image = models.ImageField(upload_to='session_images/', blank=True, null=True)
     # video_or_audio = models.FileField(upload_to='session_media/', blank=True, null=True)
-    text_content = models.TextField(blank=True, help_text="Text to read during the session")
+    text_content = models.JSONField(default=list, blank=True, help_text="Text to read during the session")
     order = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 

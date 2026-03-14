@@ -4,7 +4,7 @@ from .models import Theme, Session, SessionReflection
 class ThemeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Theme
-        fields = ['id', 'title', 'description', 'is_free_trial', 'is_authenticate', 'icon', 'icon_url', 'created_at']
+        fields = ['id', 'title', 'intro_content', 'description', 'is_free_trial', 'is_authenticate', 'icon', 'icon_url', 'created_at']
     
 class SessionReflectionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,10 +15,11 @@ class SessionReflectionSerializer(serializers.ModelSerializer):
 class SessionSerializer(serializers.ModelSerializer):
     is_completed = serializers.SerializerMethodField()
     reflection = serializers.SerializerMethodField()
+    theme_session_key = serializers.CharField(source='theme.session_key', read_only=True)
 
     class Meta:
         model = Session
-        fields = ['id', 'theme', 'title', 'subtitle', 'image', 'text_content', 'order', 'is_completed', 'reflection']
+        fields = ['id', 'theme', 'theme_session_key', 'title', 'subtitle', 'image', 'text_content', 'order', 'is_completed', 'reflection']
 
     def get_is_completed(self, obj):
         request = self.context.get('request')
