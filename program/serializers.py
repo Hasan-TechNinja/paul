@@ -4,8 +4,8 @@ from .models import Theme, Session, SessionReflection
 class ThemeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Theme
-        fields = ['id', 'title', 'intro_content', 'description', 'is_free_trial', 'is_authenticate', 'icon', 'icon_url', 'created_at']
-    
+        fields = ['id', 'title', 'intro_content', 'description', 'is_free_trial', 'is_authenticate', 'icon', 'icon_url', 'price', 'created_at']
+
 class SessionReflectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = SessionReflection

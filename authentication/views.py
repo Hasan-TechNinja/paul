@@ -8,6 +8,9 @@ from django.core.mail import send_mail
 import random
 from django.utils import timezone
 from .models import Profile
+from subscription.models import UserSubscription, ThemeSubscription
+from program.models import Theme
+from program.serializers import ThemeSerializer
 from deep_translator import GoogleTranslator
 
 User = get_user_model()
@@ -319,10 +322,40 @@ class ProfileView(APIView):
     def get(self, request):
         user = request.user
         profile = Profile.objects.get(user=user)
+
+        # Fetch subscription status
+        subscription = UserSubscription.objects.filter(user=user).first()
+        is_pro = bool(subscription and subscription.is_pro_active)
+
+        purchased_themes = []
+        if is_pro:
+            # If Pro, they own all themes
+            themes = Theme.objects.all()
+            purchased_themes = ThemeSerializer(themes, many=True).data
+        else:
+            # If Basic/Single, show only themes they have an active subscription for
+            active_theme_subs = ThemeSubscription.objects.filter(
+                user=user, is_active=True
+            ).select_related('theme')
+            
+            # Auto-expire stale records if needed before returning
+            now = timezone.now()
+            themes_to_show = []
+            for ts in active_theme_subs:
+                if ts.end_date > now:
+                    themes_to_show.append(ts.theme)
+                else:
+                    ts.is_active = False
+                    ts.save(update_fields=['is_active'])
+            
+            purchased_themes = ThemeSerializer(themes_to_show, many=True).data
+
         return Response({
             'email': user.email,
             'full_name': profile.full_name,
             'image': profile.image.url if profile.image else None,
+            'is_subscribed': is_pro,
+            'purchased_themes': purchased_themes,
         }, status=status.HTTP_200_OK)
 
     def put(self, request):

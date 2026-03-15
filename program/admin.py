@@ -9,10 +9,15 @@ class ThemeAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
 
 class SessionAdmin(admin.ModelAdmin):
-    list_display = ('id','title', 'theme', 'order', 'created_at')
+    list_display = ('id','title', 'theme', 'get_session_key', 'order', 'created_at')
     list_filter = ('theme', 'created_at')
     search_fields = ('title', 'subtitle', 'text_content')
     ordering = ('theme', 'order', 'created_at')
+
+    def get_session_key(self, obj):
+        return obj.theme.session_key if obj.theme else None
+    get_session_key.short_description = 'Session Key'
+    get_session_key.admin_order_field = 'theme__session_key'
 
 class SessionReflectionAdmin(admin.ModelAdmin):
     list_display = ('id','user', 'session', 'initial_intensity_level', 'final_intensity_level', 'created_at')

@@ -11,3 +11,9 @@ class ProfileAdmin(admin.ModelAdmin):
 
 admin.site.register(RegisterOTP, RegisterOTPAdmin)
 admin.site.register(Profile, ProfileAdmin)
+
+
+
+admin.site.site_header = 'I MOVER Admin'
+admin.site.site_title = 'I MOVER Admin'
+admin.site.index_title = 'Welcome to I MOVER Admin'
