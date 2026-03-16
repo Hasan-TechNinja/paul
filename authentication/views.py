@@ -320,7 +320,7 @@ class ProfileView(APIView):
 
     def get(self, request):
         user = request.user
-        profile = Profile.objects.get(user=user)
+        profile, created = Profile.objects.get_or_create(user=user)
 
         # Fetch subscription status
         subscription = UserSubscription.objects.filter(user=user).first()
@@ -342,7 +342,8 @@ class ProfileView(APIView):
             purchased_themes = []
             for ts in active_theme_subs:
                 if ts.end_date > now:
-                    purchased_themes.append(ts.theme.id)
+                    if ts.theme:
+                        purchased_themes.append(ts.theme.id)
                 else:
                     ts.is_active = False
                     ts.save(update_fields=['is_active'])
@@ -357,7 +358,7 @@ class ProfileView(APIView):
 
     def put(self, request):
         user = request.user
-        profile = Profile.objects.get(user=user)
+        profile, created = Profile.objects.get_or_create(user=user)
         
         full_name = request.data.get('full_name')
         image = request.data.get('image')

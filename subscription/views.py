@@ -154,3 +154,5 @@ class MyThemeSubscriptionsView(generics.ListAPIView):
         if self.request.query_params.get('active') == 'true':
             qs = qs.filter(is_active=True)
         return qs.order_by('-purchased_at')
+
+

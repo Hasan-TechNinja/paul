@@ -35,8 +35,15 @@ class UserSubscription(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='subscription')
     plan = models.ForeignKey(Plan, on_delete=models.SET_NULL, null=True, blank=True)
     start_date = models.DateTimeField(null=True, blank=True)
-    end_date = models.DateTimeField(null=True, blank=True)
+    end_date = models.DateTimeField(null=True, blank=True, help_text="Leave blank to auto-calculate based on plan duration.")
     is_active = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if not self.end_date and self.plan and self.is_active:
+            if not self.start_date:
+                self.start_date = timezone.now()
+            self.end_date = self.start_date + timedelta(days=self.plan.duration_days)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         plan_name = self.plan.name if self.plan else 'No Plan'
@@ -66,17 +73,26 @@ class ThemeSubscription(models.Model):
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='theme_subscriptions')
     theme = models.ForeignKey(
-        'program.Theme', on_delete=models.CASCADE, related_name='subscriptions'
+        'program.Theme', on_delete=models.CASCADE, related_name='subscriptions',
+        null=True, blank=True
     )
     plan = models.ForeignKey(Plan, on_delete=models.SET_NULL, null=True, blank=True)
     start_date = models.DateTimeField(default=timezone.now)
-    end_date = models.DateTimeField()
+    end_date = models.DateTimeField(null=True, blank=True, help_text="Leave blank to auto-calculate based on plan duration.")
     is_active = models.BooleanField(default=True)
     purchased_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.end_date and self.plan:
+            if not self.start_date:
+                self.start_date = timezone.now()
+            self.end_date = self.start_date + timedelta(days=self.plan.duration_days)
+        super().save(*args, **kwargs)
 
     class Meta:
         # A user can have multiple records for the same theme (e.g. renewals)
         ordering = ['-purchased_at']
+
 
     def __str__(self):
         theme_title = self.theme.title if self.theme else 'Unknown Theme'
