@@ -7,6 +7,7 @@ class Theme(models.Model):
     title = models.CharField(max_length=255)
     intro_content = models.JSONField(default=list, blank=True)
     description = models.TextField(blank=True)
+    voice_id = models.CharField(max_length=255, blank=True, null=True)
     is_free_trial = models.BooleanField(default=False)
     is_authenticate = models.BooleanField(default=True)
     session_key = models.IntegerField(blank=True, null=True, unique=True)
