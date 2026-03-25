@@ -2,10 +2,16 @@ from django.contrib import admin
 from .models import Theme, Session, SessionReflection
 
 # Register your models here.
+
+class SessionInline(admin.StackedInline):
+    model = Session
+    extra = 1
+
 class ThemeAdmin(admin.ModelAdmin):
     list_display = ('id','title', 'is_free_trial', 'is_authenticate', 'voice_id', 'created_at')
     list_filter = ('is_free_trial', 'created_at')
     search_fields = ('title', 'description')
+    inlines = [SessionInline]
     ordering = ('-created_at',)
 
 class SessionAdmin(admin.ModelAdmin):
