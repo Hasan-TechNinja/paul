@@ -71,10 +71,10 @@ class Session(models.Model):
 class SessionReflection(models.Model):
     user = models.ForeignKey(User, related_name='reflections', on_delete=models.CASCADE)
     session = models.ForeignKey(Session, related_name='reflections', on_delete=models.CASCADE)
-    initial_thoughts = models.TextField(blank=True, help_text="What do you see?")
-    initial_intensity_level = models.IntegerField(default=1, help_text="1 to 7")
-    final_thoughts = models.TextField(blank=True, help_text="What do you feel?")
-    final_intensity_level = models.IntegerField(default=1, help_text="1 to 7")
+    see_thoughts = models.TextField(blank=True, help_text="What do you see?")
+    see_intensity_level = models.IntegerField(default=1, help_text="1 to 7")
+    feel_thoughts = models.TextField(blank=True, help_text="What do you feel?")
+    feel_intensity_level = models.IntegerField(default=1, help_text="1 to 7")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

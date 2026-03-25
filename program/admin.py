@@ -8,7 +8,7 @@ class SessionInline(admin.StackedInline):
     extra = 1
 
 class ThemeAdmin(admin.ModelAdmin):
-    list_display = ('id','title', 'is_free_trial', 'is_authenticate', 'voice_id', 'created_at')
+    list_display = ('id','title', 'is_free_trial', 'is_authenticate', 'voice_id', 'session_key', 'created_at')
     list_filter = ('is_free_trial', 'created_at')
     search_fields = ('title', 'description')
     inlines = [SessionInline]
@@ -26,9 +26,9 @@ class SessionAdmin(admin.ModelAdmin):
     get_session_key.admin_order_field = 'theme__session_key'
 
 class SessionReflectionAdmin(admin.ModelAdmin):
-    list_display = ('id','user', 'session', 'initial_intensity_level', 'final_intensity_level', 'created_at')
+    list_display = ('id','user', 'session', 'see_intensity_level', 'feel_intensity_level', 'created_at')
     list_filter = ('session', 'created_at')
-    search_fields = ('user__username', 'session__title', 'initial_thoughts', 'final_thoughts')
+    search_fields = ('user__username', 'session__title', 'see_thoughts', 'feel_thoughts')
     ordering = ('-created_at',)
 
 admin.site.register(Theme, ThemeAdmin)

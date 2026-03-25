@@ -80,18 +80,18 @@ class SessionReflectionCreateUpdateView(APIView):
             user=request.user,
             session=session,
             defaults={
-                'initial_thoughts': request.data.get('initial_thoughts', ''),
-                'initial_intensity_level': request.data.get('initial_intensity_level', 1),
-                'final_thoughts': request.data.get('final_thoughts', ''),
-                'final_intensity_level': request.data.get('final_intensity_level', 1),
+                'see_thoughts': request.data.get('see_thoughts', ''),
+                'see_intensity_level': request.data.get('see_intensity_level', 1),
+                'feel_thoughts': request.data.get('feel_thoughts', ''),
+                'feel_intensity_level': request.data.get('feel_intensity_level', 1),
             }
         )
 
         if not created:
-            reflection.initial_thoughts = request.data.get('initial_thoughts', reflection.initial_thoughts)
-            reflection.initial_intensity_level = request.data.get('initial_intensity_level', reflection.initial_intensity_level)
-            reflection.final_thoughts = request.data.get('final_thoughts', reflection.final_thoughts)
-            reflection.final_intensity_level = request.data.get('final_intensity_level', reflection.final_intensity_level)
+            reflection.see_thoughts = request.data.get('see_thoughts', reflection.see_thoughts)
+            reflection.see_intensity_level = request.data.get('see_intensity_level', reflection.see_intensity_level)
+            reflection.feel_thoughts = request.data.get('feel_thoughts', reflection.feel_thoughts)
+            reflection.feel_intensity_level = request.data.get('feel_intensity_level', reflection.feel_intensity_level)
             reflection.save()
 
         serializer = SessionReflectionSerializer(reflection)

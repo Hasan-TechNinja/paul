@@ -9,7 +9,7 @@ class ThemeSerializer(serializers.ModelSerializer):
 class SessionReflectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = SessionReflection
-        fields = ['id', 'user', 'session', 'initial_thoughts', 'initial_intensity_level', 'final_thoughts', 'final_intensity_level', 'created_at']
+        fields = ['id', 'user', 'session', 'see_thoughts', 'see_intensity_level', 'feel_thoughts', 'feel_intensity_level', 'created_at']
         read_only_fields = ['user', 'session']
 
 class SessionSerializer(serializers.ModelSerializer):
