@@ -5,7 +5,7 @@ from django.utils import timezone
 # Create your models here.
 class Theme(models.Model):
     title = models.CharField(max_length=255)
-    intro_content = models.JSONField(default=list, blank=True)
+    intro_content = models.JSONField(default=list, blank=True, null=True)
     description = models.TextField(blank=True)
     voice_id = models.CharField(max_length=255, blank=True, null=True)
     is_free_trial = models.BooleanField(default=False)
