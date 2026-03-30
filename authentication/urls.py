@@ -11,5 +11,6 @@ urlpatterns = [
     path('reset-password/', views.ResetPasswordView.as_view(), name='reset-password'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
     path('profile/', views.ProfileView.as_view(), name='profile'),
+    path('profile/update/', views.ProfileUpdateView.as_view(), name='profile-update'),
     path('translate/', views.TranslateTextView.as_view(), name='translate'),
 ]

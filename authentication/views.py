@@ -356,22 +356,33 @@ class ProfileView(APIView):
             'purchased_themes': purchased_themes,
         }, status=status.HTTP_200_OK)
 
+
+class ProfileUpdateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def put(self, request):
         user = request.user
         profile, created = Profile.objects.get_or_create(user=user)
-        
-        full_name = request.data.get('full_name')
-        image = request.data.get('image')
 
-        if full_name:
+        full_name = request.data.get('full_name')
+        if full_name is not None:
             profile.full_name = full_name
-        
-        if image:
-            profile.image = image
-        
+            
+        if 'image' in request.FILES:
+            profile.image = request.FILES['image']
+        elif 'image' in request.data and request.data['image'] is None:
+             profile.image = None
+
         profile.save()
-        
-        return Response({'message': 'Profile updated successfully'}, status=status.HTTP_200_OK)
+
+        return Response({
+            'message': 'Profile updated successfully',
+            'email': user.email,
+            'full_name': profile.full_name,
+            'image': profile.image.url if profile.image else None,
+        }, status=status.HTTP_200_OK)
+
+
 
 class TranslateTextView(APIView):
     def post(self, request):
