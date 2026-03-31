@@ -29,6 +29,7 @@ class SessionReflectionAdmin(admin.ModelAdmin):
     list_display = ('id','user', 'session', 'see_intensity_level', 'feel_intensity_level', 'created_at')
     list_filter = ('session', 'created_at')
     search_fields = ('user__username', 'session__title', 'see_thoughts', 'feel_thoughts')
+    readonly_fields = ('user', 'session')
     ordering = ('-created_at',)
 
 admin.site.register(Theme, ThemeAdmin)

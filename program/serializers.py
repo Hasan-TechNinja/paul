@@ -30,7 +30,5 @@ class SessionSerializer(serializers.ModelSerializer):
     def get_reflection(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
-            reflection = obj.reflections.filter(user=request.user).first()
-            if reflection:
-                return SessionReflectionSerializer(reflection).data
-        return None
+            return obj.reflections.filter(user=request.user).exists()
+        return False
