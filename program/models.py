@@ -11,6 +11,7 @@ class Theme(models.Model):
     is_free_trial = models.BooleanField(default=False)
     is_authenticate = models.BooleanField(default=True)
     session_key = models.IntegerField(blank=True, null=True, unique=True)
+    bg_video = models.FileField(upload_to='theme_bg_videos/', blank=True, null=True)
     icon = models.ImageField(upload_to='theme_icons/', blank=True, null=True)
     icon_url = models.URLField(blank=True, null=True)
     price = models.DecimalField(
