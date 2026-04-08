@@ -7,9 +7,9 @@
 *.pyc
 __pycache__/
 local_settings.py
-db.sqlite3
-db.sqlite3-journal
-media/
+# db.sqlite3
+# db.sqlite3-journal
+# media/
 # staticfiles/
 
 ### Python ###
@@ -98,7 +98,7 @@ celerybeat.pid
 ._*
 .Spotlight-V100
 .Trashes
-ehthumbs.db
+ehthumbs
 Thumbs.db
 
 # Type checkers configuration
