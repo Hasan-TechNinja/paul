@@ -6,6 +6,21 @@ class ThemeSerializer(serializers.ModelSerializer):
         model = Theme
         fields = ['id', 'title', 'intro_content', 'description', 'is_free_trial', 'is_authenticate', 'bg_video', 'icon', 'icon_url', 'price', 'created_at', 'voice_id', 'session_key']
 
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        request = self.context.get('request')
+        lang = None
+        if request:
+            lang = getattr(request, 'query_params', request.GET).get('lang')
+
+        if lang and lang != 'en':
+            translation = instance.translations.filter(language_code=lang).first()
+            if translation:
+                ret['title'] = translation.title
+                ret['description'] = translation.description
+                ret['intro_content'] = translation.intro_content
+        return ret
+
 class SessionReflectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = SessionReflection
@@ -31,5 +46,23 @@ class SessionSerializer(serializers.ModelSerializer):
     def get_reflection(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
-            return obj.reflections.filter(user=request.user).exists()
-        return False
+            # return obj.reflections.filter(user=request.user).exists()
+            reflection = obj.reflections.filter(user=request.user).first()
+            if reflection:
+                return SessionReflectionSerializer(reflection).data
+        return None
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        request = self.context.get('request')
+        lang = None
+        if request:
+            lang = getattr(request, 'query_params', request.GET).get('lang')
+
+        if lang and lang != 'en':
+            translation = instance.translations.filter(language_code=lang).first()
+            if translation:
+                ret['title'] = translation.title
+                ret['subtitle'] = translation.subtitle
+                ret['text_content'] = translation.text_content
+        return ret

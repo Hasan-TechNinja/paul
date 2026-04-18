@@ -133,6 +133,26 @@ USE_I18N = True
 USE_TZ = True
 
 
+# Supported languages for automatic translation
+SUPPORTED_LANGUAGES = [
+    ('es', 'Spanish'),
+    ('fr', 'French'),
+    ('de', 'German'),
+    ('pt', 'Portuguese'),
+    ('hi', 'Hindi'),
+    ('ar', 'Arabic'),
+    ('bn', 'Bengali'),
+    ('it', 'Italian'),
+    ('pt-br', 'Portuguese (Brazil)'),
+    ('zh-cn', 'Chinese (Simplified)'),
+    ('ja', 'Japanese'),
+    ('ko', 'Korean'),
+    ('uk', 'Ukrainian'),
+    ('en', 'English'),
+]
+
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 

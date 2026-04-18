@@ -81,3 +81,29 @@ class SessionReflection(models.Model):
 
     def __str__(self):
         return f"Reflection by {self.user.username} on {self.session.title}"
+
+class ThemeTranslation(models.Model):
+    theme = models.ForeignKey(Theme, related_name='translations', on_delete=models.CASCADE)
+    language_code = models.CharField(max_length=10)
+    title = models.CharField(max_length=255)
+    intro_content = models.JSONField(default=list, blank=True, null=True)
+    description = models.TextField(blank=True)
+
+    class Meta:
+        unique_together = ('theme', 'language_code')
+
+    def __str__(self):
+        return f"{self.theme.title} - {self.language_code}"
+
+class SessionTranslation(models.Model):
+    session = models.ForeignKey(Session, related_name='translations', on_delete=models.CASCADE)
+    language_code = models.CharField(max_length=10)
+    title = models.CharField(max_length=255)
+    subtitle = models.CharField(max_length=255, blank=True)
+    text_content = models.JSONField(default=list, blank=True)
+
+    class Meta:
+        unique_together = ('session', 'language_code')
+
+    def __str__(self):
+        return f"{self.session.title} - {self.language_code}"
