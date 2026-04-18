@@ -1,5 +1,6 @@
 from deep_translator import GoogleTranslator
 import logging
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -7,6 +8,8 @@ def translate_text(text, target_lang, source_lang='en'):
     if not text or not isinstance(text, str):
         return text
     try:
+        # Add delay to avoid rate limiting (5 req/sec limit)
+        time.sleep(0.5)
         translated = GoogleTranslator(source=source_lang, target=target_lang).translate(text)
         return translated
     except Exception as e:
