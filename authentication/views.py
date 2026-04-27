@@ -7,7 +7,8 @@ from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 import random
 from django.utils import timezone
-from .models import Profile
+from .models import Profile, Testimonials
+from .serializers import TestimonialsSerializer
 from subscription.models import UserSubscription, ThemeSubscription
 from program.models import Theme
 from deep_translator import GoogleTranslator
@@ -420,3 +421,11 @@ class TranslateTextView(APIView):
                 {'error': f'Translation failed: {str(e)}'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class TestimonialsView(APIView):
+    permission_classes = [permissions.AllowAny]
+    def get(self, request):
+        testimonials = Testimonials.objects.all()
+        serializer = TestimonialsSerializer(testimonials, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
