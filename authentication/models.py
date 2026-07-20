@@ -30,6 +30,7 @@ class Testimonials(models.Model):
     issue = models.CharField(max_length=255)
     client_info = models.CharField(max_length=255, default='')
     created_at = models.DateTimeField(auto_now_add=True)
+    stars = models.IntegerField(default=0)
 
     def __str__(self):
         return self.client_info
