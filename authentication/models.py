@@ -27,8 +27,8 @@ class Profile(models.Model):
 
 class Testimonials(models.Model):
     text = models.TextField()
-    issue = models.CharField(max_length=255)
-    client_info = models.CharField(max_length=255, default='')
+    issue = models.CharField(max_length=255, blank=True, null=True)
+    client_info = models.CharField(max_length=255, default='', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     stars = models.IntegerField(default=0)
 
