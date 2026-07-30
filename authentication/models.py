@@ -33,4 +33,4 @@ class Testimonials(models.Model):
     stars = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.client_info
+        return self.client_info or ""

@@ -96,7 +96,8 @@ class ThemeSubscription(models.Model):
 
     def __str__(self):
         theme_title = self.theme.title if self.theme else 'Unknown Theme'
-        return f"{self.user.email} → {theme_title} (until {self.end_date:%Y-%m-%d})"
+        end_date_str = f"{self.end_date:%Y-%m-%d}" if self.end_date else "No end date"
+        return f"{self.user.email} → {theme_title} (until {end_date_str})"
 
     def check_and_update_status(self):
         """Auto-expire this theme subscription if end_date has passed."""
